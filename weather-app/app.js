@@ -11,8 +11,10 @@
 // console.log('Stopping...')
 
 const request = require('request')
+const geocode = require('./utils/geocode.js')
+const forecast = require('./utils/forecast.js')
 
-const url = 'https://api.darksky.net/forecast/329b6851c2f5171de86bee0c67e997e3/55.70440,12.55296?units=si&lang=bg'
+const url = 'https://api.darksky.net/forecast/329b6851c2f5171de86bee0c67e997e3/55.7040,12.55296?units=si&lang=bg'
 
 request({
     url: url,
@@ -23,7 +25,9 @@ request({
     //console.log(response.body.currently)
 
     if (error) {
-        console.log('Unable to connect to weather service')
+        console.log('Unable to connect to weather service, check your internet connection!')
+    } else if (response.body.error) {
+        console.log('Unable to find location,check your coordinates!')
     } else {
         console.log(response.body.daily.data[0].summary +
             ' It is currently ' +
@@ -42,12 +46,32 @@ request({
 }, (error, response) => {
 
     if (error) {
-        console.log('Unable to connect to weather service')
+        console.log('Unable to connect to location service, check your internet connection!')
+    } else if (response.body.features.length === 0) {
+        console.log('Unable to find geolocatoin, check your coordinates!')
     } else {
         console.log('Your latitude is ' +
             response.body.features[0].center[0] +
             ' and your langtitude is ' +
             response.body.features[0].center[1])
     }
-
 })
+
+geocode('New York', (error, data) => {
+    if (error) {
+         return console.log(error)
+    }
+
+    forecast(data.latitude, data.longtitude, (error, data) => {
+        if (error) {
+            return console.log(error)
+        }
+        console.log(data.location)
+        console.log(forecastData)
+    })
+})
+
+forecast(-75.7008, 44.1545, (error, data) => {
+    console.log('Error', error)
+    console.log('Error', data)
+}) 
