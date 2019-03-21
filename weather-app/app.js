@@ -67,11 +67,11 @@ geocode('New York', (error, data) => {
             return console.log(error)
         }
         console.log(data.location)
-        console.log(forecastData)
+        console.log(data.forecast)
     })
 })
 
-forecast(-75.7008, 44.1545, (error, data) => {
+forecast(-15.7008, 84.1545, (error, data) => {
     console.log('Error', error)
     console.log('Error', data)
 }) 
