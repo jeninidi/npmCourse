@@ -9,3 +9,15 @@ Task.findByIdAndDelete('5ca5e3737b8a7413c8fbe9a5').then((task) => {
 }).catch((e) => {
     console.log(e)
 })
+
+const DeleteTaskAndCount = async (id) => {
+    const task = await Task.findByIdAndDelete(id)
+    const count = await Task.countDocuments({completed: false})
+    return count
+}
+
+DeleteTaskAndCount('5ca5e3737b8a7413c8fbe9a5', 2).then((count) => {
+    console.log(count)
+}).catch((e) => {
+    console.log(e)
+})
