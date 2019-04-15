@@ -10,6 +10,28 @@ app.use(express.json())
 
 //users
 
+//update user
+app.patch('/users/:id', async (req, res) => {
+    const updates = Object.keys(req.body)
+    const allowedUpdates = ['name', 'email', 'password', 'age']
+    const isValidOperation = updates.every((update) => allowedUpdates.includes(update))
+    if (!isValidOperation) {
+        return res.status(400).send({ error: 'Invalid updates!' })
+    }
+
+    try {
+        const user = await User.findByIdAndUpdate(req.params.id, req.body, {
+            new: true,
+            runValidators: true
+        })
+        if (!user) {
+            return res.status(404).send({ error: 'User not found!' })
+        }
+        res.send(user)
+    } catch (e) {
+        res.status(400).send(e)
+    }
+})
 
 //create new user
 app.post('/users', async (req, res) => {
@@ -26,7 +48,6 @@ app.post('/users', async (req, res) => {
     //     res.status(400).send(e)
     // })
 })
-
 
 //display all users
 app.get('/users', async (req, res) => {
@@ -66,36 +87,43 @@ app.get('/users/:id', async (req, res) => {
     // })
 })
 
-app.patch('/users/:id', async (req, res) => {
-    const updates = Object.keys(req.body)
-    const allowedUpdates = ['name', 'email','password', 'age']
-    const isValidOperation = updates.every((update) => allowedUpdates.includes(update))
-   if (condition) {
-       ter
-   }
-   
+//delete user
+app.delete('/users/:id', async (req, res) => {
     try {
-        const user = await User.findByIdAndUpdate(req.params.id, req.body, {
+        const user = await User.findByIdAndDelete(req.params.id)
+        if (!user) {
+            return res.status(404).send({ error: 'User not found!' })
+        }
+        res.send(user)
+    } catch (e) {
+        res.status(500).send()
+    }
+})
+
+//tasks
+
+//update task
+app.patch('/tasks/:id', async (req, res) => {
+    const updates = Object.keys(req.body)
+    const allowedUpdates = ['completed', 'description']
+    const isValidOperation = updates.every((update) => allowedUpdates.includes(update))
+    if (!isValidOperation) {
+        return res.status(400).send({ error: 'Invalid updates!' })
+    }
+
+    try {
+        const task = await Task.findByIdAndUpdate(req.params.id, req.body, {
             new: true,
             runValidators: true
         })
-        if (!user) {
-            return res.status(404).send()
+        if (!task) {
+            return res.status(404).send({ error: 'Task does not exist!' })
         }
-        res.send(user)
+        res.send(task)
     } catch (e) {
         res.status(400).send(e)
     }
 })
-
-
-
-
-
-
-
-
-//tasks
 
 //add new task
 app.post('/tasks', async (req, res) => {
@@ -147,6 +175,19 @@ app.get('/tasks/:id', async (req, res) => {
         res.send(task)
     } catch (e) {
         res.status(500).send
+    }
+})
+
+//delete task
+app.delete('/tasks/:id', async (req, res) => {
+    try {
+        const task = await Task.findByIdAndDelete(req.params.id)
+        if (!task) {
+            return res.status(404).send({ error: 'Task not found!' })
+        }
+        res.send(task)
+    } catch (e) {
+        res.status(500).send()
     }
 })
 
