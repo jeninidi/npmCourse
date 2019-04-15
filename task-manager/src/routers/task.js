@@ -2,6 +2,7 @@ const express = require('express')
 const Task = require('../models/task')
 const router = new express.Router()
 
+
 //update 
 router.patch('/tasks/:id', async (req, res) => {
     const updates = Object.keys(req.body)
@@ -10,7 +11,7 @@ router.patch('/tasks/:id', async (req, res) => {
     if (!isValidOperation) {
         return res.status(400).send({ error: 'Invalid updates!' })
     }
-    try {
+    try { 
         const task = await Task.findById(req.params.id)
         task.completed = true
         updates.forEach((update) => task[update] = req.body[update])

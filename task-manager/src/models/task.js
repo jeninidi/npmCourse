@@ -7,14 +7,14 @@ const Task = mongoose.model('Task', {
         required: true
     },
     completed: {
-        type: Boolean,
+        type: Boolean,  
         default: false
     }
 })
 
 // const task = new Task({
 //     description: 'Go for a run',
-// })
+// }) 
 
 // task.save().then(() => {
 //     console.log(task)

@@ -2,6 +2,17 @@ const express = require('express')
 const User = require('../models/user')
 const router = new express.Router()
 
+
+//
+router.post ('/users/login', async (req, res) => {
+    try {
+        const user = await User.findByCredentials(req.body.email, req.body.password)
+        res.send(user)
+    } catch (e) {
+        res.status(400).send(e)
+    } 
+ })
+
 //update 
 router.patch('/users/:id', async (req, res) => {
     const updates = Object.keys(req.body)
@@ -16,7 +27,7 @@ router.patch('/users/:id', async (req, res) => {
         user.name = 'Something else'
         updates.forEach((update) => user[update] = req.body[update])
         await user.save()
-        
+
         // const user = await User.findByIdAndUpdate(req.params.id, req.body, {
         //     new: true,
         //     runValidators: true
